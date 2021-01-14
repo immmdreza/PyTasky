@@ -63,7 +63,7 @@ class TaskSystem:
         else:
             raise requests.ConnectionError('Invalid status code')
 
-    def topGroups(self, offset:int = 0, limit:int = 10) -> List[GroupInfo]:
+    def top_groups(self, offset: int = 0, limit: int = 10) -> List[GroupInfo]:
         json = self._send_request('topGroups', {'offset': offset, 'limit': limit})
         result = []
         for x in json:
@@ -91,3 +91,9 @@ class TaskSystem:
             )
 
         return result
+
+    topGroups = top_groups
+    usersCount = users_count
+    isUser = is_user
+    getUser = get_user
+    getUsers = get_users
