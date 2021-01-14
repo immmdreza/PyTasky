@@ -1,11 +1,11 @@
-from ..errors.accounts import InvalidToken, UnkownError
+from ..errors.accounts import InvalidToken, UnknownError
 from ..errors.api_limits import LimitedToken
 from ..errors.groups import GroupNotConnected, GroupNotFound
 from ..errors.users import UserNotFound
 
 __all__ = [
-    "InvalidToken", 
-    "UnkownError", 
+    "InvalidToken",
+    "UnknownError",
     "LimitedToken", 
     "GroupNotConnected", 
     "GroupNotFound", 

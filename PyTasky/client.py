@@ -4,11 +4,11 @@ import requests
 from urllib.parse import urljoin
 from .types import GroupInfo, UserInfo
 from .errors import (
-    LimitedToken, 
-    InvalidToken, 
-    GroupNotConnected, 
-    GroupNotFound, 
-    UnkownError
+    LimitedToken,
+    InvalidToken,
+    GroupNotConnected,
+    GroupNotFound,
+    UnknownError
 )
 
 
@@ -19,14 +19,14 @@ class TaskSystem:
             raise InvalidToken("Token is invalid")
 
         self.__base_url = 'https://taskyonline.com/app/api/client{token}/'.format(
-            token = self.token
+            token=self.token
         )
 
     def __validate_token(self) -> bool:
         parts = self.token.split(':')
         if parts.__len__() != 2:
             return False
-        
+
         if not parts[0].__len__() > 5 or not parts[0].isdigit():
             return False
 
@@ -35,12 +35,12 @@ class TaskSystem:
 
         return True
 
-    def _send_request(self, end_point: str, params = {}):
+    def _send_request(self, end_point: str, params={}):
         url = urljoin(
-            self.__base_url, 
+            self.__base_url,
             end_point
         )
-        result = requests.get(url, params= params)
+        result = requests.get(url, params=params)
         json_result = result.json()
         if result.status_code == 200:
             if json_result['ok']:
@@ -59,9 +59,9 @@ class TaskSystem:
                 elif code == "LIMITED":
                     raise LimitedToken(dis)
                 else:
-                    raise UnkownError(dis)
+                    raise UnknownError(dis)
         else:
-            raise requests.ConnectionError('Invalid status code') 
+            raise requests.ConnectionError('Invalid status code')
 
     def topGroups(self, offset:int = 0, limit:int = 10) -> List[GroupInfo]:
         json = self._send_request('topGroups', {'offset': offset, 'limit': limit})
@@ -76,13 +76,13 @@ class TaskSystem:
     def users_count(self):
         return self._send_request('usersCount')
 
-    def is_user(self, user_id:int) -> bool:
+    def is_user(self, user_id: int) -> bool:
         return self._send_request('isUser', {'userId': user_id})
 
-    def get_user(self, user_id:int) -> List[GroupInfo]:
+    def get_user(self, user_id: int) -> List[GroupInfo]:
         return UserInfo.parse(self._send_request('getUser', {'userId': user_id}))
 
-    def get_users(self, offset:int = 0, limit:int = 10) -> List[UserInfo]:
+    def get_users(self, offset: int = 0, limit: int = 10) -> List[UserInfo]:
         json = self._send_request('getUsers', {'offset': offset, 'limit': limit})
         result = []
         for x in json:
