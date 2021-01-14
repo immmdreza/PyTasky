@@ -13,6 +13,14 @@ from .errors import (
 
 
 class TaskSystem:
+    errors = {
+        "INVALID_ACCOUNT": InvalidToken,
+        "GROUP_NOT_CONNECTED": GroupNotConnected,
+        "GROUP_NOT_FOUND": GroupNotFound,
+        "USER_NOT_FOUND": UserNotFound,
+        "LIMITED": LimitedToken
+    }
+
     def __init__(self, token: str) -> None:
         self.token = token
         if not self.__validate_token():
@@ -35,33 +43,25 @@ class TaskSystem:
 
         return True
 
-    def _send_request(self, end_point: str, params={}):
-        url = urljoin(
-            self.__base_url,
-            end_point
-        )
+    def _error(self, error_code: str):
+        return self.errors.get(error_code, UnknownError)
+
+    def _send_request(self, end_point: str, params=None):
+        if params is None:
+            params = {}
+        url = urljoin(self.__base_url, end_point)
         result = requests.get(url, params=params)
-        json_result = result.json()
-        if result.status_code == 200:
-            if json_result['ok']:
-                return json_result['result']
-            else:
-                code = json_result['errorCode']
-                dis = json_result['description']
-                if code == "INVALID_ACCOUNT":
-                    raise InvalidToken(dis)
-                elif code == "GROUP_NOT_CONNECTED":
-                    raise GroupNotConnected(dis)
-                elif code == "GROUP_NOT_FOUND":
-                    raise GroupNotFound(dis)
-                elif code == "USER_NOT_FOUND":
-                    raise UserNotFound(dis)
-                elif code == "LIMITED":
-                    raise LimitedToken(dis)
-                else:
-                    raise UnknownError(dis)
-        else:
+
+        if result.status_code != 200:
             raise requests.ConnectionError('Invalid status code')
+
+        json_result = result.json()
+        if not json_result['ok']:
+            code = json_result['errorCode']
+            dis = json_result['description']
+            raise self._error(code)(dis)
+
+        return json_result['result']  # response is ok so return result
 
     def top_groups(self, offset: int = 0, limit: int = 10) -> List[GroupInfo]:
         json = self._send_request('topGroups', {'offset': offset, 'limit': limit})
