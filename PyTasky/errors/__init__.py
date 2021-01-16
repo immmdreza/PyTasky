@@ -2,6 +2,7 @@ from ..errors.accounts import InvalidToken, UnknownError
 from ..errors.api_limits import LimitedToken
 from ..errors.groups import GroupNotConnected, GroupNotFound
 from ..errors.users import UserNotFound
+from ..errors.types import ListTooLarge
 
 __all__ = [
     "InvalidToken",
@@ -9,5 +10,7 @@ __all__ = [
     "LimitedToken", 
     "GroupNotConnected", 
     "GroupNotFound", 
-    "UserNotFound"
+    "UserNotFound",
+    "ListTooLarge",
 ]
+

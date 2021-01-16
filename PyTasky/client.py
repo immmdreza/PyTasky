@@ -2,13 +2,14 @@ from PyTasky.errors.users import UserNotFound
 from typing import List
 import requests
 from urllib.parse import urljoin
-from .types import GroupInfo, UserInfo
+from .types import GroupInfo, UserInfo, GroupFullInfo
 from .errors import (
     LimitedToken,
     InvalidToken,
     GroupNotConnected,
     GroupNotFound,
-    UnknownError
+    UnknownError,
+    ListTooLarge
 )
 
 
@@ -18,7 +19,8 @@ class TaskSystem:
         "GROUP_NOT_CONNECTED": GroupNotConnected,
         "GROUP_NOT_FOUND": GroupNotFound,
         "USER_NOT_FOUND": UserNotFound,
-        "LIMITED": LimitedToken
+        "LIMITED": LimitedToken,
+        "LIST_TOO_LARGE": ListTooLarge
     }
 
     def __init__(self, token: str) -> None:
@@ -92,8 +94,29 @@ class TaskSystem:
 
         return result
 
+    def my_group(self) -> List[GroupFullInfo]:
+        json = self._send_request('myGroup')
+
+        return GroupFullInfo.parse(json)
+
+    def personal_point(self, offset: int = 0, limit: int = 10) -> List[UserInfo]:
+        json = self._send_request('personalPoint', {'offset': offset, 'limit': limit})
+        result = []
+        for x in json:
+            result.append(
+                UserInfo.parse(x)
+            )
+
+        return result
+
+    def get_names(self, user_ids: List[int], html_parse = False) -> List[UserInfo]:
+        return self._send_request('getNames', {'userIds': user_ids, 'htmlParse': html_parse})
+
     topGroups = top_groups
     usersCount = users_count
     isUser = is_user
     getUser = get_user
     getUsers = get_users
+    myGroup = my_group
+    personalPoint = personal_point
+    getNames = get_names
