@@ -96,13 +96,8 @@ class TaskSystem:
 
     def my_group(self) -> List[GroupFullInfo]:
         json = self._send_request('myGroup')
-        result = []
-        for x in json:
-            result.append(
-                GroupFullInfo.parse(x)
-            )
 
-        return result
+        return GroupFullInfo.parse(json)
 
     def personal_point(self, offset: int = 0, limit: int = 10) -> List[UserInfo]:
         json = self._send_request('personalPoint', {'offset': offset, 'limit': limit})
@@ -115,7 +110,7 @@ class TaskSystem:
         return result
 
     def get_names(self, user_ids: List[int], html_parse = False) -> List[UserInfo]:
-        return self._send_request('personalPoint', {'userIds': user_ids, 'htmlParse': html_parse})
+        return self._send_request('getNames', {'userIds': user_ids, 'htmlParse': html_parse})
 
     topGroups = top_groups
     usersCount = users_count
