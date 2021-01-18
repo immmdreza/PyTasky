@@ -22,3 +22,8 @@ for x in tops:
 Replace `API_TOKEN` with you own token.
 
 Read More at [Task System WebStie](https://taskyonline.com/docs.html).
+
+## Examples 
+Examples provided in [examples](examples) directory.
+
+Thanks to [Gheysar](https://github.com/gheysar-official)
