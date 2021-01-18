@@ -2,7 +2,7 @@
 A package to connect to TsWw Api.
 
 ## Installation
-You can install the Package using [PyPi](https://pypi.org/project/PyTasky/1.0.0/).
+You can install the Package using [PyPi](https://pypi.org/project/PyTasky/).
 Run `py -m pip install PyTasky`.
 
 ## Usage

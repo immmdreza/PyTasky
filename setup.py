@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="PyTasky",
-    version="1.0.0",
+    version="1.2.0",
     author="immmdreza",
     author_email="ir310022@gmail.com",
     description="Task System api for python",
